@@ -1,0 +1,220 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Qual o cantor?</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="font/material-icons.css"> 
+</head>
+<body>
+
+  <!-- inicio -->
+  <section class="inicio">
+    <h1>QUAL O CANTOR?</h1>    
+    <button>INICIAR</button>
+  </section>
+  <!-- inicio -->
+  
+  <!-- flag-1 -->
+  <section class="flag flag-1">  
+    <header>
+      <p>
+        <span class="mticons">star</span> 
+        ACERTOS: <span class="acertos">0</span>
+      </p>
+      <p>
+        <span class="mticons">alarm</span> 
+        <span class="minutos">00</span>:<span class="tempo">00</span>
+      </p>
+    </header>
+    <div>
+      <h1>QUAIS OS 3 CANTORES?</h1>
+      <ul>
+        <li><img class="errado01" src="img/cantor/roddy.jpg"></li>
+        <li><img class="certo c3" src="img/cantor/daniel.jpg"></li>
+        <li><img class="errado01" src="img/cantor/kali.jpg"></li>
+        <li><img class="errado01" src="img/cantor/nill.jpg"></li>
+        <li><img class="certo c2" src="img/cantor/marilia.jpg"></li>
+        <li><img class="errado01" src="img/cantor/matellica.jpg"></li>
+        <li><img class="errado01" src="img/cantor/michael.jpg"></li>
+        <li><img class="certo c1" src="img/cantor/madonna.jpg"></li>
+        <li><img class="errado01" src="img/cantor/brent.jpg"></li>
+      </ul>
+    </div>
+    <footer>
+      <p>
+        <span class="home mticons">home</span>
+        <span class="som01 mticons">volume_up</span>
+        <span class="ajuda mticons">help_outline</span>
+      </p>
+    </footer>
+  </section>
+  <!-- flag-1 -->
+
+  <!-- flag-3 -->
+  <section class="flag-3">
+    <h2>TOTAL DE ACERTOS: <span class="pont">0</span></h2>
+    <h2>TOTAL DE ERROS: <span class="errors">0</span></h2>
+    <p></p>
+    <h2 id="temppo">TEMPO: 00:<span class="temp">00</span></h2>
+    <button class="jogarnov">JOGAR NOVAMENTE</button>
+  </section>
+  <!-- flag-3 -->
+ 
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+
+  <script type="text/javascript">
+    var musica = new Audio();
+    var musica01 = new Audio();
+    var musica02 = new Audio();
+    var musica03 = new Audio();
+    var musica04 = new Audio();
+    var musica05 = new Audio();
+    var acertos = 0;
+    var erros = 0;
+    var erros02 = 0;
+    var fim = false;
+
+    $("section.inicio button").on("click", function() {
+      musica01 = new Audio('musica/Lady Gaga - Poker Face.mp3');
+      musica01.play();
+
+      musica02 = new Audio('musica/Sem Sal.mp3');
+      musica02.play();
+
+      musica03 = new Audio('musica/Daniel Caesar - Japanese Denim.mp3');
+      musica03.play();
+    
+      $("section").hide();
+      $("section.flag-1").show();
+      
+      var timer = setInterval(function() {
+        var tempo = parseInt($("span.tempo").text());
+        var tempo02 = parseInt($("span.tempo02").text());
+        tempo++;
+        if (tempo < 10) {
+          tempo = "0" + tempo;
+          tempo02 = "0" + tempo;
+        } else if ((tempo >= 60) && (fim === false)) {
+          $("span.pont").text(acertos);
+          $("span.errors").text(erros + erros02);
+          $("section").hide();
+          $("section.flag-3").show();
+          document.getElementById("temppo").style.display = "none";
+          $("section.flag-3 p").text("Tempo esgotado");
+          musica01.pause();
+          musica02.pause();
+          musica03.pause();
+          musica = new Audio('musica/game-over-acarde.wav');
+          musica.play();
+          clearInterval(timer);
+        }
+        $("span.tempo").text(tempo);
+        $("span.tempo02").text(tempo);
+      }, 1000)
+    });
+
+    $("section.flag footer p span.home").on("click",function(){
+      location.reload();
+    })
+
+    $("section.flag-1 footer p span.som01").on("click", function() {
+      var botao = $("span.som02").text();
+      if (botao == "volume_up") {
+        musica01.pause();
+        musica02.pause();
+        musica03.pause();
+        $("span.som02").text("volume_off");
+      } else {
+        $("span.som02").text("volume_up");
+        musica01.play();
+        musica02.play();
+        musica03.play();
+      }
+    });
+
+    $("section.flag-1 footer p span.ajuda").one("click", function() {
+      $(this).css({opacity: 0.5});
+      var bandeiras = $(".errado01");
+      for (var i=0; i<2; i++) {
+        var random = Math.floor(Math.random() * bandeiras.length);
+        if (bandeiras[random].style.opacity === "0.5") {
+          i--;
+        } else {
+          bandeiras[random].style.opacity = "0.5";
+        }
+      }
+    });
+
+    $("section.flag-1 ul img.certo").one("click", function() {
+      $(this).css({opacity: 0.5});
+      acertos++;
+      $("span.acertos").text(acertos);
+
+      if (this.className === "certo c1") {
+        musica01.pause();
+        musica01 = new Audio('musica/Lady Gaga - Poker Face.mp3');
+      } else if (this.className === "certo c2") {
+        musica02.pause();
+        musica02 = new Audio('musica/Sem Sal.mp3');
+      } else if (this.className === "certo c3") {
+        musica03.pause();
+        musica03 = new Audio('musica/Daniel Caesar - Japanese Denim.mp3');
+      }
+
+      if (acertos == 3) {
+        fim = true;
+        musica = new Audio('musica/correct.mp3');
+        musica.play();
+        musica04.pause();
+        musica04 = new Audio('musica/Regras da Loja.mp3');
+        musica05.pause();
+        musica05 = new Audio('musica/Metallica - The Unforgiven.mp3');
+        $("span.pont").text(acertos);
+        $("span.errors").text(erros + erros02);
+        $("span.temp").text($("span.tempo").text());
+        $("section").hide();
+        $("section.flag-3").show();
+      }
+    });
+
+    $("section.flag-1 ul img.errado01").one("click", function() {
+      if (this.style.opacity !== "0.5") {
+        erros++;
+        $(this).css({opacity: 0.5});
+
+        if (erros > 2) {
+          fim = true;
+          musica01.pause();
+          musica02.pause();
+          musica03.pause();
+          musica04.pause();
+          musica05.pause();
+          musica = new Audio('musica/game-over-acarde.wav');
+          musica.play();
+          $("span.pont").text(acertos);
+          $("span.errors").text(erros);
+          $("span.temp").text($("span.tempo").text());
+          $("section").hide();
+          $("section.flag-3").show();
+        }
+      }
+    });
+
+    $("section.flag-3 button.jogarnov").on("click", function() {
+      location.reload();
+      $("section.flag-3").hide();
+      $("section").show();
+    });
+  </script>
+
+</body>
+</html>
